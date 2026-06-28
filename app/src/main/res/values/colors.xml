@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ── Launcher ──────────────────────────────────────────────────── -->
+    <!-- Used by mipmap-anydpi-v26/ic_launcher_background drawable.      -->
+    <!-- Matches StudyLabColors.Background (#0A0E1F) so the adaptive     -->
+    <!-- icon background is the same dark navy as the app itself.        -->
+    <color name="ic_launcher_background">#0A0E1F</color>
+
+    <!-- ── Dark theme — core surfaces ───────────────────────────────── -->
+    <color name="background">#0A0E1F</color>
+    <color name="surface">#111527</color>
+    <color name="surface_variant">#161B30</color>
+    <color name="border">#22273F</color>
+
+    <!-- ── Neon accent palette ───────────────────────────────────────── -->
+    <color name="neon_green">#39FF8C</color>
+    <color name="neon_cyan">#22D3EE</color>
+    <color name="neon_pink">#FF3DAD</color>
+    <color name="neon_orange">#FF8A3D</color>
+    <color name="neon_purple">#B45CFF</color>
+
+    <!-- ── Dark theme — text ─────────────────────────────────────────── -->
+    <color name="text_primary">#E7ECF7</color>
+    <color name="text_muted">#8A93B2</color>
+
+    <!-- ── Light theme ───────────────────────────────────────────────── -->
+    <color name="light_background">#F6F7FB</color>
+    <color name="light_surface">#FFFFFF</color>
+    <color name="light_border">#E2E5F0</color>
+    <color name="light_text_primary">#131726</color>
+    <color name="light_text_muted">#5C6480</color>
+
+</resources>
