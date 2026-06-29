@@ -4,6 +4,7 @@ import com.libraryx.data.model.AppSettings
 import com.libraryx.data.model.Student
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
 import java.time.Instant
 
 /**
@@ -31,13 +32,13 @@ object BackupSerializer {
             students = students,
             settings = settings
         )
-        return json.encodeToString(payload)
+        return json.encodeToString(BackupPayload.serializer(), payload)
     }
 
     /** Mirrors `importBackup`'s lenient merge of imported settings onto defaults. */
     fun import(rawJson: String): ImportResult {
         val payload = try {
-            json.decodeFromString<BackupPayload>(rawJson)
+            json.decodeFromString(BackupPayload.serializer(), rawJson)
         } catch (e: Exception) {
             throw IllegalArgumentException("Invalid backup file", e)
         }

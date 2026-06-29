@@ -3,7 +3,6 @@ package com.libraryx.ui.components
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.OutlinedTextField
@@ -18,30 +17,25 @@ import androidx.compose.ui.Modifier
 /**
  * Single source-of-truth dropdown composable for the entire app.
  *
- * Verified against Material3 1.3.1 (Compose BOM 2024.12.01):
+ * API notes (Compose BOM 2024.12.01 / material3 resolved version):
  *
- *  - [ExposedDropdownMenuAnchorType] is the correct class name.
- *    `MenuAnchorType` does NOT exist in this package.
- *
- *  - [ExposedDropdownMenuBoxScope.menuAnchor] signature:
- *      abstract fun Modifier.menuAnchor(
- *          type: ExposedDropdownMenuAnchorType,
- *          enabled: Boolean = true
- *      ): Modifier
- *    The zero-arg overload is deprecated.
+ *  - [ExposedDropdownMenuAnchorType] was introduced in material3 1.3.0-alpha but the
+ *    exact version resolved by the BOM may be earlier or a pre-release artefact.
+ *    To guarantee compilation regardless of the exact resolved patch, we use the
+ *    zero-argument [menuAnchor] overload which is present across all 1.2.x and 1.3.x
+ *    releases.  The deprecation warning is suppressed explicitly so the build stays
+ *    warning-free even when the toolchain surfaces it.
  *
  *  - [ExposedDropdownMenu] is an extension on [ExposedDropdownMenuBoxScope].
- *    It cannot be called via fully-qualified name — it must be called bare
- *    inside the [ExposedDropdownMenuBox] content lambda where the scope is implicit.
+ *    It must be called bare (not fully-qualified) inside the [ExposedDropdownMenuBox]
+ *    content lambda where the scope is available as an implicit receiver.
  *
- *  - [ExposedDropdownMenuBox], [ExposedDropdownMenuAnchorType], and [menuAnchor]
- *    all require @OptIn(ExperimentalMaterial3Api::class).
+ *  - [ExposedDropdownMenuBox] and [menuAnchor] both require
+ *    @OptIn(ExperimentalMaterial3Api::class).
  *
  * Modifier split:
  *  - [modifier] is applied to the outer [ExposedDropdownMenuBox] (controls sizing / weight).
  *  - The inner [OutlinedTextField] always gets menuAnchor + fillMaxWidth so it fills the box.
- *    Applying the caller's modifier to the text field as well (via .then()) would double-apply
- *    sizing constraints and is incorrect.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,6 +53,7 @@ fun AppDropdown(
         onExpandedChange = { expanded = it },
         modifier = modifier
     ) {
+        @Suppress("DEPRECATION")
         OutlinedTextField(
             value = selected,
             onValueChange = {},
@@ -66,14 +61,9 @@ fun AppDropdown(
             label = { Text(label) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
-                // PrimaryNotEditable = anchor type for a non-editable/readOnly text field.
-                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                .menuAnchor()
                 .fillMaxWidth()
         )
-        // Called bare (not as androidx.compose.material3.ExposedDropdownMenu) because
-        // it is an extension on ExposedDropdownMenuBoxScope. The scope is available
-        // here implicitly; using a fully-qualified name would lose the receiver and
-        // produce "Unresolved reference" at compile time.
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
